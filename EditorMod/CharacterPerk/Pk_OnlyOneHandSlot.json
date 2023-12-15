@@ -1,0 +1,83 @@
+{
+    "ActionModifiers": [],
+    "ActionObjectives": [],
+    "AddedCards": [],
+    "AddedStartingHours": 0,
+    "CardsOnBoardObjectives": [],
+    "CheckingNotificationDetails": 0,
+    "CompleteOnLose": false,
+    "CompleteOnWin": false,
+    "DifficultyRating": 5000,
+    "DisplayPriority": 100.0,
+    "EditorOnly": false,
+    "EquippedCards": [],
+    "HiddenUntilUnlocked": false,
+    "MoonsCost": 0,
+    "NestedObjectives": [],
+    "NoSafetyMode": false,
+    "NotifyWhenNotChecked": false,
+    "OverrideEnvironment": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "OverrideEquipment": false,
+    "OverrideWeather": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "PassiveStatModifiers": [],
+    "PerkDescription": {
+        "DefaultText": "Only one hand slot.",
+        "LocalizationKey": "AddHandSlot_Pk_OnlyOneHandSlot_PerkDescription",
+        "ParentObjectID": "521abdbdc89e4abc94fecde86ea35792"
+    },
+    "PerkIcon": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "PerkIconWarpData": "Hand",
+    "PerkIconWarpType": 3,
+    "PerkName": {
+        "DefaultText": "Only One Hand Slot",
+        "LocalizationKey": "AddHandSlot_Pk_OnlyOneHandSlot_PerkName",
+        "ParentObjectID": "521abdbdc89e4abc94fecde86ea35792"
+    },
+    "PerkUnlockConditions": {
+        "DefaultText": "",
+        "LocalizationKey": "",
+        "ParentObjectID": ""
+    },
+    "PlayedCharacter": [],
+    "RequiredDifficultyScore": {
+        "x": 0,
+        "y": 0
+    },
+    "ResetLockInEditor": false,
+    "StartUnlocked": true,
+    "StartingStatModifiers": [
+        {
+            "ApplyEachTick": false,
+            "InstantModifier": false,
+            "IsInverse": false,
+            "RateModifier": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "Stat": {
+                "m_FileID": 0,
+                "m_PathID": 0
+            },
+            "StatWarpData": "3ed9754d13824a918badb45308baff0c",
+            "StatWarpType": 3,
+            "ValueModifier": {
+                "x": -5.0,
+                "y": -5.0
+            }
+        }
+    ],
+    "StatsObjectives": [],
+    "SunsCost": 0,
+    "TagsOnBoardObjectives": [],
+    "TimeObjectives": [],
+    "UniqueID": "521abdbdc89e4abc94fecde86ea35792"
+}

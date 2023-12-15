@@ -1,0 +1,15 @@
+{
+    "GroupName": {
+        "DefaultText": "HandSlot",
+        "LocalizationKey": "AddHandSlot_Pkg_HandSlot_GroupName",
+        "ParentObjectID": "9dec9351fd564b88ae27c43a42cfe77c"
+    },
+    "PerksList": [],
+    "PerksListWarpData": [
+        "97dbfde7a82f4bc69421363adffeb0b5",
+        "521abdbdc89e4abc94fecde86ea35792",
+        "9c5a4b927b9f4f7d80c1a00351b52455"
+    ],
+    "PerksListWarpType": 3,
+    "UniqueID": "9dec9351fd564b88ae27c43a42cfe77c"
+}
