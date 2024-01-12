@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace AddHandSlot;
 
@@ -33,12 +34,22 @@ public class StatCtrl
         if (ctrl.Stat?.Statuses is null || ctrl.Stat.Statuses.Length != 4) return;
 
         var stat = ctrl.Stat;
+        var map = ctrl.GetStatusesMap();
+
         stat.MinMaxValue.y = num;
         stat.VisibleValueRange.y = num;
         stat.Statuses[0].ValueRange = new Vector2Int((int)(num * 0.5) + 1, (int)(num * 0.75));
         stat.Statuses[1].ValueRange = new Vector2Int((int)(num * 0.75) + 1, (int)(num * 0.875));
         stat.Statuses[2].ValueRange = new Vector2Int((int)(num * 0.875) + 1, num - 1);
         stat.Statuses[3].ValueRange = new Vector2Int(num, num);
+
+        foreach (var status in map)
+        {
+            status.Key.ValueRange = status.Value.ValueRange;
+        }
+
+        if (ctrl.InGame is null) return;
+        GameManager.Instance.StartCoroutine(GameManager.Instance.UpdateStatStatuses(ctrl.InGame, -1, null));
     }
 
     public GameStat Stat { get; }
@@ -52,5 +63,23 @@ public class StatCtrl
     public StatCtrl(string uid)
     {
         Stat = UniqueIDScriptable.GetFromID<GameStat>(uid);
+    }
+
+    public Dictionary<StatStatus, StatStatus> GetStatusesMap()
+    {
+        var map = new Dictionary<StatStatus, StatStatus>();
+        if (InGame is null) return map;
+
+        foreach (var current in InGame.CurrentStatuses)
+        {
+            foreach (var status in Stat.Statuses)
+            {
+                if (!current.IsSameStatus(status)) continue;
+                map[current] = status;
+                break;
+            }
+        }
+
+        return map;
     }
 }

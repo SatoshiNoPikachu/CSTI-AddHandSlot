@@ -10,7 +10,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "Pikachu.AddHandSlot";
     public const string PluginName = "Add Hand Slot";
-    public const string PluginVersion = "2.0.0";
+    public const string PluginVersion = "2.0.1";
 
     // public static Plugin Instance;
 
