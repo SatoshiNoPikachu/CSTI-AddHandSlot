@@ -19,25 +19,26 @@ public static class GraphicsManagerPatch
         StatBarCtrl.UpdateStatus();
     }
 
-    // [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "Init")]
-    // public static void GraphicsManager_Init_Postfix(GraphicsManager __instance)
-    // {
-    //     if (GameLoad.Instance.Games.Count < GameLoad.Instance.CurrentGameDataIndex ||
-    //         GameLoad.Instance.CurrentGameDataIndex < 0) return;
-    //
-    //     GameSaveData CurrentGameData = GameLoad.Instance.Games[GameLoad.Instance.CurrentGameDataIndex].MainData;
-    //
-    //     if (!CurrentGameData.StatsDict.TryGetValue("3ed9754d13824a918badb45308baff0c",
-    //             out StatSaveData HandSlotNum)) return;
-    //
-    //     int CurrentHandSlotNum = (int)HandSlotNum.BaseValue;
-    //     CardLine ItemSlotsLine = __instance.ItemSlotsLine;
-    //     if (CurrentHandSlotNum > 6)
-    //         for (int i = ItemSlotsLine.Count; i < CurrentHandSlotNum; i++)
-    //             ItemSlotsLine.AddSlot(ItemSlotsLine.Count);
-    //
-    //     ItemSlotsLine.RefreshSlotIndices(0);
-    // }
+    [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "Init")]
+    public static void GraphicsManager_Init_Postfix(GraphicsManager __instance)
+    {
+        if (GameLoad.Instance.Games.Count < GameLoad.Instance.CurrentGameDataIndex ||
+            GameLoad.Instance.CurrentGameDataIndex < 0) return;
+
+        var ctrl = LineCtrl.GetLine(LineType.Hand);
+        if (ctrl is null) return;
+
+        var data = GameLoad.Instance.Games[GameLoad.Instance.CurrentGameDataIndex].MainData;
+
+        if (!data.StatsDict.TryGetValue(StatCtrl.UidHandSlotNum,
+                out var statSaveData)) return;
+
+        var num = (int)statSaveData.BaseValue;
+        if (num <= 6) return;
+        ctrl.SetSlotNum(num);
+
+        // ItemSlotsLine.RefreshSlotIndices(0);
+    }
 
     [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "UpdateSlotsVisibility")]
     public static void UpdateSlotsVisibility_Postfix()

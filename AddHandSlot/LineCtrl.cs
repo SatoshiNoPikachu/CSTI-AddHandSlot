@@ -365,10 +365,10 @@ public class LineCtrl
     public void SetSlotNum(int num)
     {
         if (num < 0) num = 0;
-
+        
         if (num > _line.Count)
         {
-            for (var i = 0; i < num; i++) _line.AddSlot(_line.Count);
+            for (var i = _line.Count; i < num; i++) _line.AddSlot(_line.Count);
         }
         else
         {
