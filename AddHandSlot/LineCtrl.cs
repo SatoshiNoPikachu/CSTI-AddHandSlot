@@ -69,19 +69,14 @@ public class LineCtrl
     static LineCtrl()
     {
         // 手牌
-        LineDelegates[LineType.Hand] = (line =>
+        LineDelegates[LineType.Hand] = (line => new[]
         {
-            var view = line.transform.parent;
-            return new[]
-            {
-                (RectTransform)view.Find("HandGroup"),
-                (RectTransform)view.Find("HandGroupLogic"),
-            };
-        }, _ => new Dictionary<LineStatus, ScaleCtrl>
+            (RectTransform)line.transform.parent
+        }, trans => new Dictionary<LineStatus, ScaleCtrl>
         {
-            [LineStatus.Initial] = new(null, 1f, 1f),
-            [LineStatus.ScaleDown] = new(null, 0.7f, 0.7f),
-            [LineStatus.DoubleLine] = new(null, 0.5f, 0.5f),
+            [LineStatus.Initial] = new(trans),
+            [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 380f, 148f),
+            [LineStatus.DoubleLine] = new(trans, 0.5f, 0.5f, 1157f, 358f),
         });
 
         // 环境
@@ -268,8 +263,8 @@ public class LineCtrl
         set
         {
             if (_status == value) return;
-            _status = value;
             ApplyScale(value);
+            _status = value;
             DragCtrl.UpdateStatus();
         }
     }
@@ -307,8 +302,9 @@ public class LineCtrl
         {
             if (trans is null) continue;
             ctrl.Apply(trans);
-            _line.RecalculateSize = true;
         }
+
+        _line.RecalculateSize = true;
     }
 
     public void DoubleLine(int _Index, ref Vector3 __result)
@@ -325,7 +321,7 @@ public class LineCtrl
         if (count % 2 == 1)
         {
             if (_type == LineType.Hand) margin.x = 0;
-            else count++;
+            count++;
         }
 
         _line.Size = _line.Spacing * 0.5f * count;
@@ -365,7 +361,7 @@ public class LineCtrl
     public void SetSlotNum(int num)
     {
         if (num < 0) num = 0;
-        
+
         if (num > _line.Count)
         {
             for (var i = _line.Count; i < num; i++) _line.AddSlot(_line.Count);

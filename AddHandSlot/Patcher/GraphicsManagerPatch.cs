@@ -36,8 +36,6 @@ public static class GraphicsManagerPatch
         var num = (int)statSaveData.BaseValue;
         if (num <= 6) return;
         ctrl.SetSlotNum(num);
-
-        // ItemSlotsLine.RefreshSlotIndices(0);
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "UpdateSlotsVisibility")]

@@ -6,7 +6,7 @@ public class PerkCtrl
 {
     public static void ModifyAddHandSlotPerkNum()
     {
-        var config = ConfigManager.Get<int>("Config", "AddSlotNum");
+        var config = ConfigManager.Get<int>("Config", "AddHandSlotNum");
         if (config is null) return;
 
         var ctrl = new PerkCtrl("97dbfde7a82f4bc69421363adffeb0b5");

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.UI;
-
+﻿// using System.Collections.Generic;
+// using HarmonyLib;
+// using UnityEngine;
+// using UnityEngine.UI;
+//
 // namespace AddHandSlot.Patcher;
-
+//
 // [Harmony]
 // public class OtherPatch
 // {
@@ -39,7 +39,7 @@ using UnityEngine.UI;
 //         else
 //         {
 //             var i = ChildDictionary.TryGetValue(rect.gameObject, out var v) ? v : 0;
-//             pos += i % 2 == 1 ? 20 : 0;
+//             pos += i % 2 == 1 ? 157 : -168;
 //         }
 //     }
 // }
