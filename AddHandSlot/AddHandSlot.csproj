@@ -74,6 +74,7 @@
     <Compile Include="LineType.cs" />
     <Compile Include="Patcher\BlueprintModelsScreenPatch.cs" />
     <Compile Include="Patcher\DynamicViewLayoutGroupPatch.cs" />
+    <Compile Include="Patcher\ExplorationPopupPatch.cs" />
     <Compile Include="Patcher\GameLoadPatch.cs" />
     <Compile Include="Patcher\GameManagerPatch.cs" />
     <Compile Include="Patcher\GraphicsManagerPatch.cs" />

@@ -2,10 +2,10 @@
 
 namespace AddHandSlot.Patcher;
 
-[Harmony]
+[HarmonyPatch(typeof(GameLoad))]
 public static class GameLoadPatch
 {
-    [HarmonyPostfix, HarmonyPatch(typeof(GameLoad), "LoadMainGameData")]
+    [HarmonyPostfix, HarmonyPatch("LoadMainGameData")]
     public static void LoadMainGameData_Postfix()
     {
         PerkCtrl.ModifyAddHandSlotPerkNum();

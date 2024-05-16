@@ -2,10 +2,10 @@
 
 namespace AddHandSlot.Patcher;
 
-[Harmony]
+[HarmonyPatch(typeof(StatStatusGraphics))]
 public class StatStatusGraphicsPatch
 {
-    [HarmonyPostfix, HarmonyPatch(typeof(StatStatusGraphics), "Awake")]
+    [HarmonyPostfix, HarmonyPatch("Awake")]
     public static void Awake_Postfix(StatStatusGraphics __instance)
     {
         StatBarCtrl.AddBar(__instance);

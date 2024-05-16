@@ -2,10 +2,10 @@
 
 namespace AddHandSlot.Patcher;
 
-[Harmony]
+[HarmonyPatch(typeof(GraphicsManager))]
 public static class GraphicsManagerPatch
 {
-    [HarmonyPrefix, HarmonyPatch(typeof(GraphicsManager), "Init")]
+    [HarmonyPrefix, HarmonyPatch("Init")]
     public static void Init_Prefix(GraphicsManager __instance)
     {
         LineCtrl.Init();
@@ -19,7 +19,7 @@ public static class GraphicsManagerPatch
         StatBarCtrl.UpdateStatus();
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "Init")]
+    [HarmonyPostfix, HarmonyPatch("Init")]
     public static void GraphicsManager_Init_Postfix(GraphicsManager __instance)
     {
         if (GameLoad.Instance.Games.Count < GameLoad.Instance.CurrentGameDataIndex ||
@@ -38,7 +38,7 @@ public static class GraphicsManagerPatch
         ctrl.SetSlotNum(num);
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(GraphicsManager), "UpdateSlotsVisibility")]
+    [HarmonyPostfix, HarmonyPatch("UpdateSlotsVisibility")]
     public static void UpdateSlotsVisibility_Postfix()
     {
         var ctrl = new StatCtrl(StatCtrl.UidHandSlotNum);

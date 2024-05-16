@@ -12,6 +12,9 @@ namespace AddHandSlot;
 /// </summary>
 public class LineCtrl
 {
+    /// <summary>
+    /// 修改手牌数量
+    /// </summary>
     public static void ModifyHandSlotNum()
     {
         var statCtrl = new StatCtrl(StatCtrl.UidHandSlotNum);
@@ -20,12 +23,19 @@ public class LineCtrl
         ModifyHandSlotNum((int)statCtrl.InGame.SimpleCurrentValue);
     }
 
+    /// <summary>
+    /// 修改手牌数量
+    /// </summary>
+    /// <param name="num">手牌数量</param>
     public static void ModifyHandSlotNum(int num)
     {
         if (GraphicsManager.Instance is null) return;
         GetLine(LineType.Hand)?.SetSlotNum(num);
     }
 
+    /// <summary>
+    /// 强制增加手牌数量
+    /// </summary>
     public static void ForceAddHandSlot()
     {
         if (GameManager.Instance is null) return;
@@ -42,6 +52,24 @@ public class LineCtrl
         ConfigManager.Get<bool>("Config", "ForceAddHandSlot").Value = false;
     }
 
+    public static void ModifyExplorationSlotNum()
+    {
+        var ctrl = GetLine(LineType.Exploration);
+        if (ctrl is null) return;
+        ModifyExplorationSlotNum(ctrl.GetSlotNum());
+    }
+
+    public static void ModifyExplorationSlotNum(int num)
+    {
+        if (GraphicsManager.Instance is null) return;
+        GetLine(LineType.Exploration)?.SetSlotNum(num);
+    }
+
+    /// <summary>
+    /// 配置项改变时
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public static void OnConfigChange(object sender, EventArgs args)
     {
         if (GraphicsManager.Instance is null) return;
@@ -134,6 +162,17 @@ public class LineCtrl
             [LineStatus.DoubleLine] = new(trans, 0.5f, 0.5f, 1400f, 400f),
         });
 
+        // 探索
+        LineDelegates[LineType.Exploration] = (line => new[]
+        {
+            (RectTransform)line.transform.parent
+        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        {
+            [LineStatus.Initial] = new(trans),
+            [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 1800f, null),
+            [LineStatus.DoubleLine] = new(trans, 0.5f, 0.5f, 2500f, 360f),
+        });
+
         DoubleArgs[LineType.Base] = new DoubleLineArg(2, new Vector2(0f, -325f), new Vector2(50f, 360f));
 
         DoubleArgs[LineType.Blueprint] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 170f));
@@ -145,6 +184,8 @@ public class LineCtrl
         DoubleArgs[LineType.Inventory] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 170f));
 
         DoubleArgs[LineType.Location] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 180f));
+
+        DoubleArgs[LineType.Exploration] = new DoubleLineArg(2, new Vector2(0f, -325f), new Vector2(55f, 165f));
     }
 
     /// <summary>
@@ -163,6 +204,8 @@ public class LineCtrl
         Lines[LineType.Inventory] =
             new LineCtrl(LineType.Inventory, graphics.InventoryInspectionPopup.InventorySlotsLine);
         Lines[LineType.Equipment] = new LineCtrl(LineType.Equipment, graphics.CharacterWindow.EquipmentSlotsLine);
+        Lines[LineType.Exploration] =
+            new LineCtrl(LineType.Exploration, graphics.ExplorationDeckPopup.ExplorationSlotsLine, false);
     }
 
     /// <summary>
@@ -214,6 +257,11 @@ public class LineCtrl
             return LineType.Equipment;
         }
 
+        if (line == graphics.ExplorationDeckPopup.ExplorationSlotsLine)
+        {
+            return LineType.Exploration;
+        }
+
         return null;
     }
 
@@ -231,10 +279,13 @@ public class LineCtrl
 
     private LineStatus _status = LineStatus.Initial;
 
-    public LineCtrl(LineType type, CardLine line)
+    private readonly bool _notForceUpdate;
+
+    public LineCtrl(LineType type, CardLine line, bool notForceUpdate = true)
     {
         _type = type;
         _line = line;
+        _notForceUpdate = notForceUpdate;
         _transScales = LineDelegates[type].trans(line);
         _scaleCtrlDict = LineDelegates[type].scale(_transScales.First());
         _transView = ResolveView();
@@ -253,6 +304,7 @@ public class LineCtrl
             LineType.Hand => graphics.ItemsParent,
             LineType.Inventory => graphics.InventoryInspectionPopup.InventorySlotsParent,
             LineType.Location => graphics.LocationParent,
+            LineType.Exploration => graphics.ExplorationDeckPopup.SlotsParent,
             _ => null
         };
     }
@@ -262,7 +314,7 @@ public class LineCtrl
         get => _status;
         set
         {
-            if (_status == value) return;
+            if (_notForceUpdate && _status == value) return;
             ApplyScale(value);
             _status = value;
             DragCtrl.UpdateStatus();
@@ -309,9 +361,11 @@ public class LineCtrl
 
     public void DoubleLine(int _Index, ref Vector3 __result)
     {
-        if (_transView is null || _type != LineType.Blueprint && _line.ExtraSpaces is not { Count: > 0 }) return;
-        var spaces = _line.ExtraSpaces;
+        if (_transView is null) return;
+        if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+            _line.ExtraSpaces is not { Count: > 0 }) return;
 
+        var spaces = _line.ExtraSpaces;
         var padding = _args.Padding;
         var margin = _args.Margin;
         var offset = _args.Offset;
@@ -320,7 +374,8 @@ public class LineCtrl
 
         if (count % 2 == 1)
         {
-            if (_type == LineType.Hand) margin.x = 0;
+            if (_type is LineType.Hand or LineType.Exploration) margin.x = 0;
+
             count++;
         }
 
@@ -345,12 +400,14 @@ public class LineCtrl
 
         _line.Size = Mathf.Max(_line.Size, _line.MinSize);
 
+        // if (_type != LineType.Exploration)
         _transView.GetComponent<RectTransform>().sizeDelta = new Vector2(_line.Size, 0f);
 
         var num = spaces.Where(space => space.AtIndex <= _Index).Sum(space => space.Space);
 
         __result = _line.LayoutOriginPos / offset +
-                   _line.LayoutDirection * (_line.Spacing * (int)(_Index / 2) + num) + padding * (_Index % 2) + margin;
+                   _line.LayoutDirection * (_line.Spacing * (int)(_Index / 2.0) + num) +
+                   padding * (_Index % 2) + margin;
     }
 
 
@@ -386,8 +443,27 @@ public class LineCtrl
             }
         }
 
+        if (_type == LineType.Exploration)
+        {
+            GraphicsManager.Instance.ExplorationDeckPopup.ExplorationSlotCount = num;
+
+            Status = num switch
+            {
+                < 7 => LineStatus.Initial,
+                < 10 => LineStatus.ScaleDown,
+                _ => LineStatus.DoubleLine
+            };
+
+            return;
+        }
+
         if (_type != LineType.Hand) return;
         if (num == 0) GraphicsManager.Instance.MinItemSlots = 0;
         GraphicsManager.Instance.MaxItemSlots = num;
+    }
+
+    public int GetSlotNum()
+    {
+        return _line.Count;
     }
 }

@@ -73,7 +73,7 @@ public static class StatBarCtrl
 
     public static void AddBar(StatStatusGraphics bar)
     {
-        if (bar is null) return;
+        if (bar?.PinIcon is null) return;
 
         if (BarScaleMap.Count == 0)
         {

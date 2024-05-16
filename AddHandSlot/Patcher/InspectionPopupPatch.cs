@@ -2,10 +2,10 @@
 
 namespace AddHandSlot.Patcher;
 
-[Harmony]
+[HarmonyPatch(typeof(InspectionPopup))]
 public static class InspectionPopupPatch
 {
-    [HarmonyPostfix, HarmonyPatch(typeof(InspectionPopup), "Setup", typeof(InGameCardBase))]
+    [HarmonyPostfix, HarmonyPatch("Setup", typeof(InGameCardBase))]
     public static void Setup_Postfix(InspectionPopup __instance)
     {
         if (__instance != GraphicsManager.Instance.InventoryInspectionPopup) return;

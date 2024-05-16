@@ -3,10 +3,10 @@ using HarmonyLib;
 
 namespace AddHandSlot.Patcher;
 
-[Harmony]
+[HarmonyPatch(typeof(GameManager))]
 public static class GameManagerPatch
 {
-    [HarmonyPostfix, HarmonyPatch(typeof(GameManager), "Awake")]
+    [HarmonyPostfix, HarmonyPatch( "Awake")]
     public static void Awake_Postfix(GameManager __instance)
     {
         LineCtrl.ForceAddHandSlot();
@@ -14,7 +14,7 @@ public static class GameManagerPatch
         LineCtrl.ModifyHandSlotNum();
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(GameManager), "ChangeStatValue")]
+    [HarmonyPostfix, HarmonyPatch("ChangeStatValue")]
     public static IEnumerator ChangeStatValue_Postfix(IEnumerator result, InGameStat _Stat)
     {
         yield return result;

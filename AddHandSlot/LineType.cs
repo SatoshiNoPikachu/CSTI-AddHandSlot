@@ -30,5 +30,10 @@ public enum LineType
     /// <summary>
     /// 装备
     /// </summary>
-    Equipment
+    Equipment,
+    
+    /// <summary>
+    /// 探索
+    /// </summary>
+    Exploration
 }
