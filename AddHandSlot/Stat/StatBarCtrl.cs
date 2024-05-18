@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace AddHandSlot;
+namespace AddHandSlot.Stat;
 
 public static class StatBarCtrl
 {

@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿using AddHandSlot.Line;
+using AddHandSlot.Stat;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -10,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "Pikachu.AddHandSlot";
     public const string PluginName = "Add Hand Slot";
-    public const string PluginVersion = "2.0.4";
+    public const string PluginVersion = "2.0.5";
 
     // internal static Plugin Instance;
     // public static string PluginPath => Path.GetDirectoryName(Instance.Info.Location);

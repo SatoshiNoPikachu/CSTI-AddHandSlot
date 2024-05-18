@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AddHandSlot.Common;
+using AddHandSlot.Stat;
 using BepInEx.Configuration;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace AddHandSlot;
+namespace AddHandSlot.Line;
 
 /// <summary>
 /// CardLine控制器
@@ -50,6 +52,19 @@ public class LineCtrl
         ModifyHandSlotNum(6 + config.Value);
 
         ConfigManager.Get<bool>("Config", "ForceAddHandSlot").Value = false;
+    }
+
+    public static void OnExplorationPopupSetup(ExplorationPopup popup)
+    {
+        var ab = ActionBehaviour.Create(popup);
+        var tag = false;
+        ab.OnUpdateAction = () =>
+        {
+            if (tag) return;
+            ModifyExplorationSlotNum();
+            tag = true;
+            ab.Destroy();
+        };
     }
 
     public static void ModifyExplorationSlotNum()
@@ -341,7 +356,7 @@ public class LineCtrl
     {
         if (_type == LineType.Inventory && ConfigManager.IsEnable("Special", "EnableInventoryDynamicDoubleLine"))
         {
-            return (_line.Count - _line.InactiveElements) > 8;
+            return _line.Count - _line.InactiveElements > 8;
         }
 
         return ConfigManager.IsEnable("DoubleLine", $"Enable{Enum.GetName(typeof(LineType), _type)}");
@@ -400,7 +415,6 @@ public class LineCtrl
 
         _line.Size = Mathf.Max(_line.Size, _line.MinSize);
 
-        // if (_type != LineType.Exploration)
         _transView.GetComponent<RectTransform>().sizeDelta = new Vector2(_line.Size, 0f);
 
         var num = spaces.Where(space => space.AtIndex <= _Index).Sum(space => space.Space);

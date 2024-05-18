@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AddHandSlot;
+namespace AddHandSlot.Line;
 
 public struct DoubleLineArg
 {

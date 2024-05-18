@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace AddHandSlot;
+namespace AddHandSlot.Line;
 
 public static class DragCtrl
 {

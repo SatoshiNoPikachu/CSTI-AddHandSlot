@@ -1,4 +1,4 @@
-﻿namespace AddHandSlot;
+﻿namespace AddHandSlot.Line;
 
 public enum LineType
 {

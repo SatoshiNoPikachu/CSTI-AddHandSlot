@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AddHandSlot.Line;
+using HarmonyLib;
 
 namespace AddHandSlot.Patcher;
 
