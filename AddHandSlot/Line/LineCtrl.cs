@@ -192,7 +192,7 @@ public class LineCtrl
 
         DoubleArgs[LineType.Blueprint] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 170f));
 
-        DoubleArgs[LineType.Equipment] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 170f));
+        DoubleArgs[LineType.Equipment] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, -45f));
 
         DoubleArgs[LineType.Hand] = new DoubleLineArg(2, new Vector2(0f, -325f), new Vector2(55f, 162.5f));
 
@@ -200,7 +200,7 @@ public class LineCtrl
 
         DoubleArgs[LineType.Location] = new DoubleLineArg(1, new Vector2(0f, -325f), new Vector2(0f, 180f));
 
-        DoubleArgs[LineType.Exploration] = new DoubleLineArg(2, new Vector2(0f, -325f), new Vector2(55f, 165f));
+        DoubleArgs[LineType.Exploration] = new DoubleLineArg(2, new Vector2(0f, -325f), new Vector2(55f, 162f));
     }
 
     /// <summary>
@@ -278,6 +278,32 @@ public class LineCtrl
         }
 
         return null;
+    }
+
+    public static void OnUpdateList(DynamicViewLayoutGroup group)
+    {
+        if (group is not CardLine line) return;
+
+        var type = ResolveLineType(line);
+        if (type is null) return;
+
+        var ctrl = GetLine((LineType)type);
+        if (ctrl is null) return;
+
+        if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculateSizeOnDoubleLine();
+    }
+
+    public static void OnGetElementPosition(DynamicViewLayoutGroup group, int index, ref Vector3 result)
+    {
+        if (group is not CardLine line) return;
+
+        var type = ResolveLineType(line);
+        if (type is null) return;
+
+        var ctrl = GetLine((LineType)type);
+        if (ctrl is null) return;
+
+        if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculatePositionOnDoubleLine(index, ref result);
     }
 
     private readonly CardLine _line;
@@ -374,7 +400,53 @@ public class LineCtrl
         _line.RecalculateSize = true;
     }
 
-    public void DoubleLine(int _Index, ref Vector3 __result)
+    private void RecalculateSizeOnDoubleLine()
+    {
+        if (_transView is null) return;
+
+        if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+            _line.ExtraSpaces is not { Count: > 0 }) return;
+
+        var spaces = _line.ExtraSpaces;
+        var count = _line.AllElements.Count - _line.InactiveElements;
+        if (count % 2 == 1) count++;
+
+        var size = _line.Spacing * 0.5f * count;
+
+        if (spaces is not null)
+        {
+            size += spaces.Sum(dynamicViewExtraSpace => dynamicViewExtraSpace.Space);
+        }
+
+        if (_line.AddedSize && _line.AddedSize.gameObject.activeSelf)
+        {
+            if (_line.LayoutOrientation == RectTransform.Axis.Horizontal)
+            {
+                size += _line.AddedSize.rect.width;
+            }
+            else
+            {
+                size += _line.AddedSize.rect.height;
+            }
+        }
+
+        if (_line.LayoutOrientation == RectTransform.Axis.Horizontal)
+        {
+            size += _line.Padding.left + _line.Padding.right;
+        }
+        else
+        {
+            size += _line.Padding.top + _line.Padding.right;
+        }
+
+        _line.Size = Mathf.Max(size, _line.MinSize);
+
+        var rt = _transView.GetComponent<RectTransform>();
+        new ScaleCtrl(_line.Size, null, rt).Apply(rt);
+        // _transView.GetComponent<RectTransform>().sizeDelta = new Vector2(_line.Size, 0f);
+    }
+
+    public void RecalculatePositionOnDoubleLine(int _Index, ref Vector3 __result)
     {
         if (_transView is null) return;
         if (_type != LineType.Blueprint && _type != LineType.Exploration &&
@@ -386,38 +458,21 @@ public class LineCtrl
         var offset = _args.Offset;
 
         var count = _line.AllElements.Count - _line.InactiveElements;
-
         if (count % 2 == 1)
         {
             if (_type is LineType.Hand or LineType.Exploration) margin.x = 0;
-
             count++;
         }
 
-        _line.Size = _line.Spacing * 0.5f * count;
-
-        if (_line.ExtraSpaces != null)
-        {
-            foreach (var dynamicViewExtraSpace in _line.ExtraSpaces)
-                _line.Size += dynamicViewExtraSpace.Space;
-        }
-
-        if (_line.AddedSize && _line.AddedSize.gameObject.activeSelf)
-        {
-            if (_line.LayoutOrientation == RectTransform.Axis.Horizontal)
-                _line.Size += _line.AddedSize.rect.width;
-            else _line.Size += _line.AddedSize.rect.height;
-        }
-
-        if (_line.LayoutOrientation == RectTransform.Axis.Horizontal)
-            _line.Size += _line.Padding.left + _line.Padding.right;
-        else _line.Size += _line.Padding.top + _line.Padding.right;
-
-        _line.Size = Mathf.Max(_line.Size, _line.MinSize);
-
-        _transView.GetComponent<RectTransform>().sizeDelta = new Vector2(_line.Size, 0f);
-
         var num = spaces.Where(space => space.AtIndex <= _Index).Sum(space => space.Space);
+
+        if (_type is LineType.Hand or LineType.Exploration)
+        {
+            __result = _line.LayoutOriginPos / offset +
+                       _line.LayoutDirection * (_line.Spacing * (_Index % (int)(count / 2.0)) + num) +
+                       padding * (_Index < count / 2 ? 0 : 1) + margin;
+            return;
+        }
 
         __result = _line.LayoutOriginPos / offset +
                    _line.LayoutDirection * (_line.Spacing * (int)(_Index / 2.0) + num) +

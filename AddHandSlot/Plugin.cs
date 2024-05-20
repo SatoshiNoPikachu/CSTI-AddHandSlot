@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "Pikachu.AddHandSlot";
     public const string PluginName = "Add Hand Slot";
-    public const string PluginVersion = "2.0.5";
+    public const string PluginVersion = "2.0.6";
 
     // internal static Plugin Instance;
     // public static string PluginPath => Path.GetDirectoryName(Instance.Info.Location);
@@ -75,10 +75,10 @@ public class Plugin : BaseUnityPlugin
         Config.Bind("Special", "EnableStatusBarElongate", true, "状态条延长（仅当启用修改状态栏的尺寸时生效）").SettingChanged +=
             (_, _) => StatBarCtrl.UpdateStatusBar();
 
-        foreach (var kpv in Config)
+        foreach (var (def, entry) in Config)
         {
-            if (kpv.Key.Section is "SlotScale" or "DoubleLine")
-                ((ConfigEntry<bool>)kpv.Value).SettingChanged += LineCtrl.OnConfigChange;
+            if (def.Section is "SlotScale" or "DoubleLine")
+                ((ConfigEntry<bool>)entry).SettingChanged += LineCtrl.OnConfigChange;
         }
     }
 }
