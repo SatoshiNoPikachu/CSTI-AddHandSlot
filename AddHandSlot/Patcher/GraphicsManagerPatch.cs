@@ -27,7 +27,7 @@ public static class GraphicsManagerPatch
         if (GameLoad.Instance.Games.Count < GameLoad.Instance.CurrentGameDataIndex ||
             GameLoad.Instance.CurrentGameDataIndex < 0) return;
 
-        var ctrl = LineCtrl.GetLine(LineType.Hand);
+        var ctrl = LineCtrl.GetCtrl(LineType.Hand);
         if (ctrl is null) return;
 
         var data = GameLoad.Instance.Games[GameLoad.Instance.CurrentGameDataIndex].MainData;

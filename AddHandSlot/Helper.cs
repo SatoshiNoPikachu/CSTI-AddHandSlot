@@ -15,4 +15,9 @@ public static class Helper
     {
         return !obj ? null : obj;
     }
+    
+    public static T GetComponent<T>(this Component m, string path) where T : Component
+    {
+        return m.transform.Find(path)?.GetComponent<T>();
+    }
 }

@@ -11,7 +11,7 @@ public static class InspectionPopupPatch
     {
         if (__instance != GraphicsManager.Instance.InventoryInspectionPopup) return;
 
-        var ctrl = LineCtrl.GetLine(LineType.Inventory);
+        var ctrl = LineCtrl.GetCtrl(LineType.Inventory);
         ctrl?.CheckStatus();
     }
 }

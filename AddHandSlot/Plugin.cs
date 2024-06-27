@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "Pikachu.AddHandSlot";
     public const string PluginName = "Add Hand Slot";
-    public const string PluginVersion = "2.0.6";
+    public const string PluginVersion = "2.1.0";
 
     // internal static Plugin Instance;
     // public static string PluginPath => Path.GetDirectoryName(Instance.Info.Location);
@@ -57,7 +57,7 @@ public class Plugin : BaseUnityPlugin
         Config.Bind("DoubleLine", "EnableLocation", true, "双行环境槽位");
         Config.Bind("DoubleLine", "EnableBase", true, "双行基础槽位");
         Config.Bind("DoubleLine", "EnableHand", false, "双行手牌槽位");
-        Config.Bind("DoubleLine", "EnableBlueprint", false, "双行蓝图槽位（体验版）");
+        Config.Bind("DoubleLine", "EnableBlueprint", true, "双行蓝图槽位");
         Config.Bind("DoubleLine", "EnableInventory", true, "双行容器槽位");
         Config.Bind("DoubleLine", "EnableEquipment", true, "双行装备槽位");
 

@@ -68,6 +68,10 @@
       <HintPath>C:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
@@ -75,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blueprint\BlueprintTabCtrl.cs" />
+    <Compile Include="Blueprint\LockedBlueprintCtrl.cs" />
     <Compile Include="Blueprint\NextTabButton.cs" />
     <Compile Include="Common\ActionBehaviour.cs" />
     <Compile Include="ConfigManager.cs" />
@@ -85,13 +90,13 @@
     <Compile Include="Line\LineStatus.cs" />
     <Compile Include="Line\LineType.cs" />
     <Compile Include="Patcher\BlueprintModelsScreenPatch.cs" />
+    <Compile Include="Patcher\CardLinePatch.cs" />
     <Compile Include="Patcher\DynamicViewLayoutGroupPatch.cs" />
     <Compile Include="Patcher\ExplorationPopupPatch.cs" />
     <Compile Include="Patcher\GameLoadPatch.cs" />
     <Compile Include="Patcher\GameManagerPatch.cs" />
     <Compile Include="Patcher\GraphicsManagerPatch.cs" />
     <Compile Include="Patcher\InspectionPopupPatch.cs" />
-    <Compile Include="Patcher\OtherPatch.cs" />
     <Compile Include="Patcher\StatStatusGraphicsPatch.cs" />
     <Compile Include="PerkCtrl.cs" />
     <Compile Include="Plugin.cs" />

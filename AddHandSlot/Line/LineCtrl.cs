@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AddHandSlot.Blueprint;
 using AddHandSlot.Common;
 using AddHandSlot.Stat;
 using BepInEx.Configuration;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace AddHandSlot.Line;
 
@@ -32,7 +35,7 @@ public class LineCtrl
     public static void ModifyHandSlotNum(int num)
     {
         if (GraphicsManager.Instance is null) return;
-        GetLine(LineType.Hand)?.SetSlotNum(num);
+        GetCtrl(LineType.Hand)?.SetSlotNum(num);
     }
 
     /// <summary>
@@ -69,7 +72,7 @@ public class LineCtrl
 
     public static void ModifyExplorationSlotNum()
     {
-        var ctrl = GetLine(LineType.Exploration);
+        var ctrl = GetCtrl(LineType.Exploration);
         if (ctrl is null) return;
         ModifyExplorationSlotNum(ctrl.GetSlotNum());
     }
@@ -77,7 +80,7 @@ public class LineCtrl
     public static void ModifyExplorationSlotNum(int num)
     {
         if (GraphicsManager.Instance is null) return;
-        GetLine(LineType.Exploration)?.SetSlotNum(num);
+        GetCtrl(LineType.Exploration)?.SetSlotNum(num);
     }
 
     /// <summary>
@@ -91,7 +94,7 @@ public class LineCtrl
         if (sender is not ConfigEntry<bool> config) return;
         if (!Enum.TryParse<LineType>(config.Definition.Key.Substring(6), out var type)) return;
 
-        var line = GetLine(type);
+        var line = GetCtrl(type);
         if (line is null) return;
 
         if (line.IsAllowDoubleLine()) line.Status = LineStatus.DoubleLine;
@@ -112,10 +115,10 @@ public class LineCtrl
     static LineCtrl()
     {
         // 手牌
-        LineDelegates[LineType.Hand] = (line => new[]
-        {
+        LineDelegates[LineType.Hand] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 380f, 148f),
@@ -123,10 +126,10 @@ public class LineCtrl
         });
 
         // 环境
-        LineDelegates[LineType.Location] = (line => new[]
-        {
+        LineDelegates[LineType.Location] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 550f, null),
@@ -134,10 +137,10 @@ public class LineCtrl
         });
 
         // 基础
-        LineDelegates[LineType.Base] = (line => new[]
-        {
+        LineDelegates[LineType.Base] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 380f, null),
@@ -145,10 +148,10 @@ public class LineCtrl
         });
 
         // 蓝图
-        LineDelegates[LineType.Blueprint] = (line => new[]
-        {
+        LineDelegates[LineType.Blueprint] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 620f, null),
@@ -156,10 +159,10 @@ public class LineCtrl
         });
 
         // 容器
-        LineDelegates[LineType.Inventory] = (line => new[]
-        {
+        LineDelegates[LineType.Inventory] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 500f, 0f),
@@ -167,10 +170,10 @@ public class LineCtrl
         });
 
         // 装备
-        LineDelegates[LineType.Equipment] = (line => new[]
-        {
+        LineDelegates[LineType.Equipment] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 600f, null),
@@ -178,10 +181,10 @@ public class LineCtrl
         });
 
         // 探索
-        LineDelegates[LineType.Exploration] = (line => new[]
-        {
+        LineDelegates[LineType.Exploration] = (line =>
+        [
             (RectTransform)line.transform.parent
-        }, trans => new Dictionary<LineStatus, ScaleCtrl>
+        ], trans => new Dictionary<LineStatus, ScaleCtrl>
         {
             [LineStatus.Initial] = new(trans),
             [LineStatus.ScaleDown] = new(trans, 0.7f, 0.7f, 1800f, null),
@@ -229,9 +232,15 @@ public class LineCtrl
     /// <param name="type">卡槽类型</param>
     /// <returns>LineCtrl</returns>
     [CanBeNull]
-    public static LineCtrl GetLine(LineType type)
+    public static LineCtrl GetCtrl(LineType type)
     {
-        return Lines.TryGetValue(type, out var line) ? line : null;
+        return Lines.TryGetValue(type, out var ctrl) ? ctrl : null;
+    }
+
+    public static LineCtrl GetCtrl(CardLine line)
+    {
+        var type = ResolveLineType(line);
+        return type is null ? null : GetCtrl((LineType)type);
     }
 
     public static IEnumerable<LineCtrl> GetLines()
@@ -287,7 +296,7 @@ public class LineCtrl
         var type = ResolveLineType(line);
         if (type is null) return;
 
-        var ctrl = GetLine((LineType)type);
+        var ctrl = GetCtrl((LineType)type);
         if (ctrl is null) return;
 
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculateSizeOnDoubleLine();
@@ -300,10 +309,114 @@ public class LineCtrl
         var type = ResolveLineType(line);
         if (type is null) return;
 
-        var ctrl = GetLine((LineType)type);
+        var ctrl = GetCtrl((LineType)type);
         if (ctrl is null) return;
 
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculatePositionOnDoubleLine(index, ref result);
+    }
+
+    public static bool IsRunGetPointerIndex(CardLine line)
+    {
+        var ctrl = GetCtrl(line);
+
+        return ctrl?.Status is null or not LineStatus.DoubleLine || ctrl._type is LineType.Equipment;
+    }
+
+    public static int GetPointerIndex(CardLine line, InGameCardBase card, int result)
+    {
+        var ctrl = GetCtrl(line);
+        if (ctrl?.Status is null or not LineStatus.DoubleLine || ctrl._type is LineType.Equipment) return result;
+
+        var slots = line.Slots;
+        if (slots == null)
+        {
+            return -1;
+        }
+
+        var pointer = line.Pointer.position;
+        var curIndex = slots.IndexOf(card.CurrentSlot);
+        for (var i = 0; i < slots.Count; i++)
+        {
+            if (!slots[i].IsActive || !slots[i].IsVisible ||
+                (slots[i].AssignedCard != null && card.CurrentContainer == slots[i].AssignedCard) ||
+                i == curIndex) continue;
+            if (pointer.x > slots[i].CurrentRect.xMin && pointer.x < slots[i].CurrentRect.xMax &&
+                pointer.y > slots[i].CurrentRect.yMin && pointer.y < slots[i].CurrentRect.yMax)
+            {
+                return i;
+            }
+
+            if (i + 1 == curIndex && pointer.x > slots[0].CurrentRect.xMin) continue;
+
+            float leftX;
+            float leftY;
+            float rightX;
+            float rightY;
+            if (pointer.x < slots[0].CurrentRect.xMin && i == 0)
+            {
+                leftX = line.WorldRect.xMin;
+                leftY = line.WorldRect.yMin;
+                rightX = slots[0].CurrentRect.xMin;
+                rightY = slots[0].CurrentRect.yMin;
+            }
+            else
+            {
+                leftX = slots[i].CurrentRect.xMax;
+                leftY = slots[i].CurrentRect.yMax;
+                rightX = line.WorldRect.xMax;
+                rightY = line.WorldRect.yMax;
+
+                if (i < slots.Count - 1)
+                {
+                    for (var j = i + 1; j < slots.Count; j++)
+                    {
+                        if (!slots[j].IsActive) continue;
+                        if (ctrl._type is not LineType.Hand && i % 2 != j % 2) continue;
+
+                        rightX = slots[j].CurrentRect.xMin;
+                        rightY = slots[j].CurrentRect.yMin;
+                        break;
+                    }
+
+                    // for (int j = i + 1, z = i; j < slots.Count; j++)
+                    // {
+                    //     if (!slots[j].IsActive) continue;
+                    //     z++;
+                    //     if (i % 2 != z % 2) continue;
+                    //
+                    //     rightX = slots[j].CurrentRect.xMin;
+                    //     rightY = slots[j].CurrentRect.yMin;
+                    //     break;
+                    // }
+                }
+            }
+
+            if (pointer.x <= leftX || pointer.y >= leftY ||
+                pointer.x >= rightX || pointer.y <= rightY) continue;
+
+            if (i == 0 && pointer.x < slots[0].CurrentRect.xMin)
+            {
+                return 0;
+            }
+
+            return i + 1;
+
+            // var index = i + 1;
+            // for (var j = 0; j < slots.Count; j++)
+            // {
+            //     if (!slots[j].IsActive)
+            //     {
+            //         index--;
+            //         continue;
+            //     }
+            //
+            //     if (j >= i) break;
+            // }
+
+            // return index < 0 ? i + 1 : index;
+        }
+
+        return -1;
     }
 
     private readonly CardLine _line;
@@ -359,6 +472,7 @@ public class LineCtrl
             ApplyScale(value);
             _status = value;
             DragCtrl.UpdateStatus();
+            if (_type is LineType.Blueprint) LockedBlueprintCtrl.Instance?.OnLineStatusChange(value);
         }
     }
 
@@ -535,4 +649,9 @@ public class LineCtrl
     {
         return _line.Count;
     }
+
+    // public int GetActiveSlotNum()
+    // {
+    //     return _line.AllElements.Count - _line.InactiveElements;
+    // }
 }
