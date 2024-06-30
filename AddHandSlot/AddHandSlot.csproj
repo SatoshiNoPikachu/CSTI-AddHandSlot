@@ -103,6 +103,7 @@
     <Compile Include="PosCtrl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScaleCtrl.cs" />
+    <Compile Include="ScrollView\InspectionPopupScroll.cs" />
     <Compile Include="Stat\StatBarCtrl.cs" />
     <Compile Include="Stat\StatCtrl.cs" />
   </ItemGroup>

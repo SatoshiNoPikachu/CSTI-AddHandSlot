@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using AddHandSlot.Line;
+using AddHandSlot.ScrollView;
 using AddHandSlot.Stat;
 using HarmonyLib;
 
@@ -14,6 +15,8 @@ public static class GameManagerPatch
         LineCtrl.ForceAddHandSlot();
 
         LineCtrl.ModifyHandSlotNum();
+        
+        InspectionPopupScroll.Create();
     }
 
     [HarmonyPostfix, HarmonyPatch("ChangeStatValue")]
