@@ -18,8 +18,11 @@ public static class InspectionPopupScroll
 
         var frame = view.transform.Find("Frame")?.gameObject;
         if (frame) Object.DestroyImmediate(frame);
+        
+        var viewport = view.transform.Find("Viewport")?.gameObject;
+        if (viewport) viewport.AddComponent<NonDrawingGraphic>();
 
-        var actions = view.transform.Find("Viewport/Actions")?.gameObject;
+        var actions = viewport?.transform.Find("Actions")?.gameObject;
         if (actions) Object.DestroyImmediate(actions);
 
         var bar = view.transform.Find("ScrollbarHorizontal");
@@ -43,7 +46,8 @@ public static class InspectionPopupScroll
         var viewport = view.transform.Find("Viewport");
         actions.SetParent(viewport, false);
 
-        view.GetComponent<ScrollRect>().content = actions;
+        var scrollRect = view.GetComponent<ScrollRect>();
+        scrollRect.content = actions;
 
         actions.GetComponent<LayoutElement>().minHeight = 85;
     }
