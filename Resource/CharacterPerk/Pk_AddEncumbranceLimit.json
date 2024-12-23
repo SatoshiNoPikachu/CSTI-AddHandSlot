@@ -35,7 +35,7 @@
         "m_FileID": 0,
         "m_PathID": 0
     },
-    "PerkIconWarpData": "Hand",
+    "PerkIconWarpData": "Weight",
     "PerkIconWarpType": 3,
     "PerkName": {
         "DefaultText": "Add Encumbrance Limit",

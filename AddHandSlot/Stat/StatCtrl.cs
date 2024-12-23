@@ -48,6 +48,14 @@ public class StatCtrl
         ConfigManager.Get<bool>("Config", "ForceModifyEncumbrance").Value = false;
     }
 
+    public static void ModifyEncumbranceLimit()
+    {
+        var ctrl = new StatCtrl("AddHandSlot-EncumbranceLimitNum");
+        if (!ctrl.InGame) return;
+        
+        ModifyEncumbranceLimit((int)ctrl.InGame.CurrentValue(GameManager.Instance.NotInBase));
+    }
+
     /// <summary>
     /// 修改负重上限
     /// </summary>

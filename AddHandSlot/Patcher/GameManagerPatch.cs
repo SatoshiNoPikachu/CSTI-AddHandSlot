@@ -13,8 +13,10 @@ public static class GameManagerPatch
     public static void Awake_Postfix(GameManager __instance)
     {
         LineCtrl.ForceAddHandSlot();
-
         LineCtrl.ModifyHandSlotNum();
+
+        StatCtrl.ForceModifyEncumbranceLimit();
+        StatCtrl.ModifyEncumbranceLimit();
 
         InspectionPopupScroll.Create();
     }
