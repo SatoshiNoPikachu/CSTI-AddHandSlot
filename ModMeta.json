@@ -1,0 +1,12 @@
+{
+  "Name": {
+    "En": "AddHandSlot&CardSizeReduce",
+    "SimpCn": "增加手牌槽位&缩小卡牌"
+  },
+  "Description": {
+    "SimpCn": "增加手牌槽位&缩小卡牌是一个综合功能类Mod，提供了修改手牌槽位数量、修改玩家的负重上限、UI优化、使槽位缩小或双行等功能。"
+  },
+  "Author": "Pikachu",
+  "Icon": "Icon.png",
+  "PluginGuid": ["Pikachu.AddHandSlot"]
+}

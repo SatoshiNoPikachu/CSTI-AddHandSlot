@@ -1,0 +1,8 @@
+HandSlotNum_Description,"手牌数量"
+HandSlotNum_GameName,"手牌数量"
+EncumbranceLimitNum_GameName,"负重上限"
+EncumbranceLimitNum_Description,"负重上限"
+Pk_AddHandSlot_PerkDescription,"增加手牌槽位"
+Pk_AddHandSlot_PerkName,"增加手牌槽位"
+Pk_AddEncumbranceLimit_PerkDescription,"增加负重上限"
+Pk_AddEncumbranceLimit_PerkName,"增加负重上限"

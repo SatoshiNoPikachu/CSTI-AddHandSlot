@@ -1,27 +1,51 @@
 ﻿using System.Collections.Generic;
+using AddHandSlot.Line;
 using UnityEngine;
 
 namespace AddHandSlot.Stat;
 
 public class StatCtrl
 {
-    public const string UidHandSlotNum = "3ed9754d13824a918badb45308baff0c";
+    public const string UidHandSlotNum = "AddHandSlot-HandSlotNum";
+
+    public static void OnStatValueChange(InGameStat stat)
+    {
+        if (!stat) return;
+
+        var model = stat.StatModel;
+        if (!model) return;
+
+        var curValue = (int)stat.CurrentValue(GameManager.Instance.NotInBase);
+
+        if (model.UniqueID == UidHandSlotNum)
+        {
+            LineCtrl.ModifyHandSlotNum(curValue);
+            return;
+        }
+
+        if (model.UniqueID != "AddHandSlot-EncumbranceLimitNum") return;
+
+        ModifyEncumbranceLimit(curValue);
+    }
 
     /// <summary>
     /// 修改负重上限
     /// </summary>
-    public static void ModifyEncumbranceLimit()
+    public static void ForceModifyEncumbranceLimit()
     {
-        if (!ConfigManager.IsEnable("Config", "EnableModifyEncumbrance"))
-        {
-            ModifyEncumbranceLimit(4000);
-            return;
-        }
+        if (GameManager.Instance is null) return;
+        if (!ConfigManager.IsEnable("Config", "ForceModifyEncumbrance")) return;
 
         var config = ConfigManager.Get<int>("Config", "AddEncumbranceNum");
         if (config is null) return;
 
-        ModifyEncumbranceLimit(config.Value + 4000);
+        var ctrl = new StatCtrl("AddHandSlot-EncumbranceLimitNum");
+        if (!ctrl.InGame) return;
+
+        ctrl.InGame.CurrentBaseValue = 4000 + config.Value;
+        ModifyEncumbranceLimit((int)ctrl.InGame.CurrentValue(GameManager.Instance.NotInBase));
+
+        ConfigManager.Get<bool>("Config", "ForceModifyEncumbrance").Value = false;
     }
 
     /// <summary>
@@ -31,7 +55,7 @@ public class StatCtrl
     private static void ModifyEncumbranceLimit(int num)
     {
         var ctrl = new StatCtrl("21574a6120f4d3c4b913c69987e2ff06");
-        if (ctrl.Stat?.Statuses is null || ctrl.Stat.Statuses.Length != 4) return;
+        if (ctrl.Stat?.Statuses?.Length is null or not 4) return;
 
         var stat = ctrl.Stat;
         var map = ctrl.GetStatusesMap();

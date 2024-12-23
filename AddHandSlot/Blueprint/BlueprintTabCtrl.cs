@@ -1,55 +1,31 @@
-﻿using UnityEngine;
-
+﻿using ModCore.UI;
 
 namespace AddHandSlot.Blueprint;
 
-public class BlueprintTabCtrl : MonoBehaviour
+public class BlueprintTabCtrl : MBSingleton<BlueprintTabCtrl>
 {
-    private static BlueprintTabCtrl _instance;
-
-    public static BlueprintTabCtrl Instance
-    {
-        get => _instance.SafeAccess();
-        private set => _instance = value;
-    }
-
     public static void OnBlueprintModelsScreenAwake(BlueprintModelsScreen screen)
     {
         if (!screen) return;
-        if (Instance) return;
 
-        if (screen.TabsParent)
-        {
-            new ScaleCtrl(-185, null, screen.TabsParent).Apply(screen.TabsParent);
-        }
+        var prefab = UIManager.GetPrefab<ActionButton>(CommonPrefab.UidActionButton);
+        if (!prefab) return;
 
-        Create(screen);
-    }
+        new ScaleCtrl(-185, null, screen.TabsParent).Apply(screen.TabsParent);
 
-    private static void Create(BlueprintModelsScreen screen)
-    {
         var ctrl = screen.gameObject.AddComponent<BlueprintTabCtrl>();
-        ctrl.Setup(screen);
-        Instance = ctrl;
+        ctrl._screen = screen;
+
+        var btn = Instantiate(prefab, screen.TabsParent.parent, false);
+        btn.name = "NextTabButton";
+        btn.Text = "→";
+        btn.OnClick = ctrl.NextTabPage;
+        new PosCtrl(btn.transform, 1385).Apply(btn.transform);
     }
 
     private BlueprintModelsScreen _screen;
 
-    private NextTabButton _nextTabButton;
-
     private int _currentTab;
-
-    private void OnDestroy()
-    {
-        Instance = null;
-    }
-
-    private void Setup(BlueprintModelsScreen screen)
-    {
-        _screen = screen;
-        _nextTabButton = NextTabButton.CreateTopTabButton(screen);
-        _nextTabButton.AddListener(NextTabPage);
-    }
 
     public void ChangeTabPage()
     {

@@ -7,8 +7,8 @@
     "CheckingNotificationDetails": 0,
     "CompleteOnLose": false,
     "CompleteOnWin": false,
-    "DifficultyRating": 5000,
-    "DisplayPriority": 100.0,
+    "DifficultyRating": -1000,
+    "DisplayPriority": 1000.0,
     "EditorOnly": false,
     "EquippedCards": [],
     "HiddenUntilUnlocked": false,
@@ -27,9 +27,9 @@
     },
     "PassiveStatModifiers": [],
     "PerkDescription": {
-        "DefaultText": "Only one hand slot.",
-        "LocalizationKey": "AddHandSlot_Pk_OnlyOneHandSlot_PerkDescription",
-        "ParentObjectID": "521abdbdc89e4abc94fecde86ea35792"
+        "DefaultText": "Add hand slot.",
+        "LocalizationKey": "AddHandSlot_Pk_AddHandSlot_PerkDescription",
+        "ParentObjectID": ""
     },
     "PerkIcon": {
         "m_FileID": 0,
@@ -38,9 +38,9 @@
     "PerkIconWarpData": "Hand",
     "PerkIconWarpType": 3,
     "PerkName": {
-        "DefaultText": "Only One Hand Slot",
-        "LocalizationKey": "AddHandSlot_Pk_OnlyOneHandSlot_PerkName",
-        "ParentObjectID": "521abdbdc89e4abc94fecde86ea35792"
+        "DefaultText": "Add Hand Slot",
+        "LocalizationKey": "AddHandSlot_Pk_AddHandSlot_PerkName",
+        "ParentObjectID": ""
     },
     "PerkUnlockConditions": {
         "DefaultText": "",
@@ -67,11 +67,11 @@
                 "m_FileID": 0,
                 "m_PathID": 0
             },
-            "StatWarpData": "3ed9754d13824a918badb45308baff0c",
+            "StatWarpData": "AddHandSlot-HandSlotNum",
             "StatWarpType": 3,
             "ValueModifier": {
-                "x": -5.0,
-                "y": -5.0
+                "x": 6.0,
+                "y": 6.0
             }
         }
     ],
@@ -79,5 +79,5 @@
     "SunsCost": 0,
     "TagsOnBoardObjectives": [],
     "TimeObjectives": [],
-    "UniqueID": "521abdbdc89e4abc94fecde86ea35792"
+    "UniqueID": "AddHandSlot-Pk_AddHandSlot"
 }

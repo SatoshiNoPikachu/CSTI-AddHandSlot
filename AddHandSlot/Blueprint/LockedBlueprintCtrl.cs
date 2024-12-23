@@ -4,20 +4,12 @@ using UnityEngine.UI;
 
 namespace AddHandSlot.Blueprint;
 
-public class LockedBlueprintCtrl : MonoBehaviour
+public class LockedBlueprintCtrl : MBSingleton<LockedBlueprintCtrl>
 {
-    private static LockedBlueprintCtrl _instance;
-
-    public static LockedBlueprintCtrl Instance
+    public static void OnBlueprintModelsScreenAwake(BlueprintModelsScreen screen)
     {
-        get => _instance.SafeAccess();
-        private set => _instance = value;
-    }
-
-    public static void OnBlueprintModelsScreenAwake(BlueprintModelsScreen __instance)
-    {
-        if (Instance) return;
-        Instance = __instance?.LockedBlueprintsParent?.gameObject.AddComponent<LockedBlueprintCtrl>();
+        if (!screen) return;
+        screen.LockedBlueprintsParent?.gameObject.AddComponent<LockedBlueprintCtrl>();
     }
 
     private GridLayoutGroup _gridLayoutGroup;
@@ -45,15 +37,10 @@ public class LockedBlueprintCtrl : MonoBehaviour
         if (ctrl is not null) OnLineStatusChange(ctrl.Status);
     }
 
-    private void OnDestroy()
-    {
-        Instance = null;
-    }
-
     public void OnLineStatusChange(LineStatus status)
     {
         if (_gridLayoutGroup is null || _image is null) return;
-        
+
         if (status is LineStatus.DoubleLine)
         {
             _gridLayoutGroup.constraintCount = 2;

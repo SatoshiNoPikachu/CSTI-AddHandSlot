@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using AddHandSlot.Blueprint;
-using AddHandSlot.Common;
 using AddHandSlot.Stat;
 using BepInEx.Configuration;
 using JetBrains.Annotations;
+using ModCore.Common;
 using UnityEngine;
-using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace AddHandSlot.Line;
 

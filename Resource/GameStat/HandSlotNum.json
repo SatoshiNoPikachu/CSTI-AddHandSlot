@@ -33,7 +33,7 @@
     "Description": {
         "DefaultText": "Hand Slot Number",
         "LocalizationKey": "AddHandSlot_HandSlotNum_Description",
-        "ParentObjectID": "3ed9754d13824a918badb45308baff0c"
+        "ParentObjectID": ""
     },
     "FeedbackInfo": {
         "Icon": {
@@ -50,7 +50,7 @@
     "GameName": {
         "DefaultText": "Hand Slot Number",
         "LocalizationKey": "AddHandSlot_HandSlotNum_GameName",
-        "ParentObjectID": "3ed9754d13824a918badb45308baff0c"
+        "ParentObjectID": ""
     },
     "InvertedDirection": false,
     "MaxStalenessStack": 0,
@@ -93,7 +93,7 @@
         "x": 0.0,
         "y": 0.0
     },
-    "UniqueID": "3ed9754d13824a918badb45308baff0c",
+    "UniqueID": "AddHandSlot-HandSlotNum",
     "UsesNovelty": false,
     "Visibility": 0,
     "VisibleInDetailedList": false,
