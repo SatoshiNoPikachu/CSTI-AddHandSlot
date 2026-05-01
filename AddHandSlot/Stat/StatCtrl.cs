@@ -1,11 +1,13 @@
 ﻿using AddHandSlot.Line;
+using ModCore.Games.Extensions;
 using UnityEngine;
 
 namespace AddHandSlot.Stat;
 
 public class StatCtrl(string uid)
 {
-    public const string UidHandSlotNum = "AddHandSlot-HandSlotNum";
+    public const string UidHandSlotNum = "AddHandSlot:HandSlotNum";
+    public const string UidEncumbranceLimitNum =  "AddHandSlot:EncumbranceLimitNum";
 
     public static void OnStatValueChange(InGameStat stat)
     {
@@ -22,7 +24,7 @@ public class StatCtrl(string uid)
             return;
         }
 
-        if (model.UniqueID != "AddHandSlot-EncumbranceLimitNum") return;
+        if (model.UniqueID != UidEncumbranceLimitNum) return;
 
         ModifyEncumbranceLimit(curValue);
     }
@@ -38,7 +40,7 @@ public class StatCtrl(string uid)
         var config = ConfigManager.Get<int>("Config", "AddEncumbranceNum");
         if (config is null) return;
 
-        var ctrl = new StatCtrl("AddHandSlot-EncumbranceLimitNum");
+        var ctrl = new StatCtrl(UidEncumbranceLimitNum);
         if (!ctrl.InGame) return;
 
         ctrl.InGame.CurrentBaseValue = 4000 + config.Value;
@@ -49,7 +51,7 @@ public class StatCtrl(string uid)
 
     public static void ModifyEncumbranceLimit()
     {
-        var ctrl = new StatCtrl("AddHandSlot-EncumbranceLimitNum");
+        var ctrl = new StatCtrl(UidEncumbranceLimitNum);
         if (!ctrl.InGame) return;
         
         ModifyEncumbranceLimit((int)ctrl.InGame.CurrentValue(GameManager.Instance.NotInBase));
@@ -85,11 +87,7 @@ public class StatCtrl(string uid)
 
     public GameStat Stat { get; } = UniqueIDScriptable.GetFromID<GameStat>(uid);
 
-    public InGameStat InGame =>
-        GameManager.Instance is not null && Stat is not null &&
-        GameManager.Instance.StatsDict.TryGetValue(Stat, out var stat)
-            ? stat
-            : null;
+    public InGameStat InGame => GameManager.Instance is not null && Stat is not null ? Stat.InGame : null;
 
     public Dictionary<StatStatus, StatStatus> GetStatusesMap()
     {

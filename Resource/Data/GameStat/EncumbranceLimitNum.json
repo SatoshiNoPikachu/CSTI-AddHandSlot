@@ -93,7 +93,7 @@
         "x": 0.0,
         "y": 0.0
     },
-    "UniqueID": "AddHandSlot-EncumbranceLimitNum",
+    "UniqueID": "AddHandSlot:EncumbranceLimitNum",
     "UsesNovelty": false,
     "Visibility": 0,
     "VisibleInDetailedList": false,

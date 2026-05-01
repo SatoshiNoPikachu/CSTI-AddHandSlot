@@ -23,7 +23,7 @@ public static class GameManagerPatch
     [HarmonyPostfix, HarmonyPatch("ChangeStatValue")]
     public static IEnumerator ChangeStatValue_Postfix(IEnumerator result, InGameStat _Stat)
     {
-        yield return result;
+        while (result.MoveNext()) yield return result.Current;
 
         StatCtrl.OnStatValueChange(_Stat);
     }

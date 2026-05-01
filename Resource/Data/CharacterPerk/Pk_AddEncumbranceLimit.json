@@ -67,7 +67,7 @@
                 "m_FileID": 0,
                 "m_PathID": 0
             },
-            "StatWarpData": "AddHandSlot-EncumbranceLimitNum",
+            "StatWarpData": "AddHandSlot:EncumbranceLimitNum",
             "StatWarpType": 3,
             "ValueModifier": {
                 "x": 6000.0,
@@ -79,5 +79,5 @@
     "SunsCost": 0,
     "TagsOnBoardObjectives": [],
     "TimeObjectives": [],
-    "UniqueID": "AddHandSlot-Pk_AddEncumbranceLimit"
+    "UniqueID": "AddHandSlot:Pk_AddEncumbranceLimit"
 }

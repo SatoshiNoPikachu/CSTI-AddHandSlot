@@ -67,7 +67,7 @@
                 "m_FileID": 0,
                 "m_PathID": 0
             },
-            "StatWarpData": "AddHandSlot-HandSlotNum",
+            "StatWarpData": "AddHandSlot:HandSlotNum",
             "StatWarpType": 3,
             "ValueModifier": {
                 "x": 6.0,
@@ -79,5 +79,5 @@
     "SunsCost": 0,
     "TagsOnBoardObjectives": [],
     "TimeObjectives": [],
-    "UniqueID": "AddHandSlot-Pk_AddHandSlot"
+    "UniqueID": "AddHandSlot:Pk_AddHandSlot"
 }

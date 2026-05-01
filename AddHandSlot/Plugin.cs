@@ -21,18 +21,7 @@ public class Plugin : BaseUnityPlugin<Plugin>
         Harmony.PatchAll();
 
         ConfigManager.Bind();
-
-        PreloadData();
-    }
-
-    private static void PreloadData()
-    {
-        Loader.PreloadData<GameStat>("AddHandSlot:HandSlotNum", ResourcesJson.HandSlotNum);
-        Loader.PreloadData<GameStat>("AddHandSlot:EncumbranceLimitNum", ResourcesJson.EncumbranceLimitNum);
-
-        Loader.PreloadData<CharacterPerk>("AddHandSlot:Pk_AddHandSlot", ResourcesJson.Pk_AddHandSlot);
-        Loader.PreloadData<CharacterPerk>("AddHandSlot:Pk_AddEncumbranceLimit", ResourcesJson.Pk_AddEncumbranceLimit);
-
+        
         Loader.LoadCompleteEvent += PerkCtrl.ModifyAddHandSlotPerkNum;
         Loader.LoadCompleteEvent += PerkCtrl.ModifyAddEncumbranceLimitNum;
     }

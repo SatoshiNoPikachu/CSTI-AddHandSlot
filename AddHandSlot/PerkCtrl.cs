@@ -9,7 +9,7 @@ public class PerkCtrl
         var config = ConfigManager.Get<int>("Config", "AddHandSlotNum");
         if (config is null) return;
 
-        var ctrl = new PerkCtrl("AddHandSlot-Pk_AddHandSlot");
+        var ctrl = new PerkCtrl("AddHandSlot:Pk_AddHandSlot");
 
         ctrl.Perk?.StartingStatModifiers[0].ValueModifier = new Vector2(config.Value, config.Value);
     }
@@ -19,7 +19,7 @@ public class PerkCtrl
         var config = ConfigManager.Get<int>("Config", "AddEncumbranceNum");
         if (config is null) return;
 
-        var ctrl = new PerkCtrl("AddHandSlot-Pk_AddEncumbranceLimit");
+        var ctrl = new PerkCtrl("AddHandSlot:Pk_AddEncumbranceLimit");
 
         ctrl.Perk?.StartingStatModifiers[0].ValueModifier = new Vector2(config.Value, config.Value);
     }

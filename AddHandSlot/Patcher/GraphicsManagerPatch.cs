@@ -40,11 +40,11 @@ public static class GraphicsManagerPatch
         ctrl.SetSlotNum(num);
     }
 
-    [HarmonyPostfix, HarmonyPatch("UpdateSlotsVisibility")]
-    public static void UpdateSlotsVisibility_Postfix()
-    {
-        var ctrl = new StatCtrl(StatCtrl.UidHandSlotNum);
-        if (ctrl.InGame is null) return;
-        if (ctrl.InGame.SimpleCurrentValue == 0) LineCtrl.ModifyHandSlotNum(0);
-    }
+    // [HarmonyPostfix, HarmonyPatch("UpdateSlotsVisibility")]
+    // public static void UpdateSlotsVisibility_Postfix()
+    // {
+    //     var ctrl = new StatCtrl(StatCtrl.UidHandSlotNum);
+    //     if (ctrl.InGame is null) return;
+    //     if (ctrl.InGame.SimpleCurrentValue == 0) LineCtrl.ModifyHandSlotNum(0);
+    // }
 }
