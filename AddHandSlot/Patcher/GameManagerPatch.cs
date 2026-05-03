@@ -1,5 +1,4 @@
 ﻿using AddHandSlot.Line;
-using AddHandSlot.ScrollView;
 using AddHandSlot.Stat;
 using HarmonyLib;
 
@@ -16,8 +15,6 @@ public static class GameManagerPatch
 
         StatCtrl.ForceModifyEncumbranceLimit();
         StatCtrl.ModifyEncumbranceLimit();
-
-        InspectionPopupScroll.Create();
     }
 
     [HarmonyPostfix, HarmonyPatch("ChangeStatValue")]
