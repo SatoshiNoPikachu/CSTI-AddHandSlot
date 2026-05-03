@@ -5,14 +5,14 @@ using ModCore.Data;
 
 namespace AddHandSlot;
 
-[BepInDependency("Pikachu.CSTI.ModCore", ModCoreVersion)]
+[BepInDependency(ModCoreGuid, ModCoreVersion)]
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [ModNamespace(PluginName)]
 public class Plugin : BaseUnityPlugin<Plugin>
 {
     private const string PluginGuid = "Pikachu.AddHandSlot";
     public const string PluginName = "AddHandSlot";
-    public const string PluginVersion = "3.3.0";
+    public const string PluginVersion = "3.4.0";
 
     private static readonly Harmony Harmony = new(PluginGuid);
 
