@@ -38,6 +38,19 @@ internal abstract class ConfigManager : ConfigBase<Plugin>
 
         Config.Bind("Special", "EnableInventoryDynamicDoubleLine", true,
             "容器动态双行槽位（仅当启用双行容器槽位生效，启用后仅当容器槽位数量大于8时才会按双行显示）");
+        Config.Bind("Special", "EnableLocationDynamicDoubleLine", false,
+                "环境动态双行槽位（启用后仅当环境槽位卡牌数量大于动态双行阈值时才会按双行显示）").SettingChanged +=
+            (_, _) => LineCtrl.GetCtrl(LineType.Location)?.CheckStatus();
+        Config.Bind("Special", "EnableBaseDynamicDoubleLine", false,
+                "基础动态双行槽位（启用后仅当基础槽位卡牌数量大于动态双行阈值时才会按双行显示）").SettingChanged +=
+            (_, _) => LineCtrl.GetCtrl(LineType.Base)?.CheckStatus();
+        Config.Bind("Special", "DynamicDoubleLineThreshold", 9,
+            new ConfigDescription("动态双行阈值（环境/基础槽位卡牌数量大于该值时按双行显示）",
+                new AcceptableValueRange<int>(1, 50))).SettingChanged += (_, _) =>
+        {
+            LineCtrl.GetCtrl(LineType.Location)?.CheckStatus();
+            LineCtrl.GetCtrl(LineType.Base)?.CheckStatus();
+        };
         Config.Bind("Special", "EnableStatusBarElongate", true, "状态条延长（仅当启用修改状态栏的尺寸时生效）").SettingChanged +=
             (_, _) => StatBarCtrl.UpdateStatusBar();
 

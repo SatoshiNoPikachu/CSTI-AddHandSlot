@@ -285,6 +285,42 @@ By.サトシの皮卡丘
 
 
 
+### 环境动态双行槽位
+
+类别：Special
+
+键名：EnableLocationDynamicDoubleLine
+
+范围：true（启用），false（禁用，默认）
+
+说明：启用后仅当环境槽位卡牌数量大于动态双行阈值时才会按双行显示，卡牌数量变化时自动切换单/双行。
+
+
+
+### 基础动态双行槽位
+
+类别：Special
+
+键名：EnableBaseDynamicDoubleLine
+
+范围：true（启用），false（禁用，默认）
+
+说明：启用后仅当基础槽位卡牌数量大于动态双行阈值时才会按双行显示，卡牌数量变化时自动切换单/双行。
+
+
+
+### 动态双行阈值
+
+类别：Special
+
+键名：DynamicDoubleLineThreshold
+
+范围：1-50（默认为 9）
+
+说明：环境/基础槽位卡牌数量大于该值时按双行显示（默认大于 9，即 10 张及以上双行）。
+
+
+
 ### 状态条延长
 
 类别：Special

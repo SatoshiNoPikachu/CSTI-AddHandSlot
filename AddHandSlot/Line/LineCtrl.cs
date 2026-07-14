@@ -301,6 +301,13 @@ public class LineCtrl
         var ctrl = GetCtrl((LineType)type);
         if (ctrl is null) return;
 
+        // 环境/基础槽位启用动态双行时，卡牌数量变化后重新判定单/双行状态
+        if (type is LineType.Location or LineType.Base &&
+            ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), (LineType)type)}DynamicDoubleLine"))
+        {
+            ctrl.CheckStatus();
+        }
+
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculateSizeOnDoubleLine();
     }
 
@@ -499,6 +506,13 @@ public class LineCtrl
         if (_type == LineType.Inventory && ConfigManager.IsEnable("Special", "EnableInventoryDynamicDoubleLine"))
         {
             return _line.Count - _line.InactiveElements > 8;
+        }
+
+        if (_type is LineType.Location or LineType.Base &&
+            ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), _type)}DynamicDoubleLine"))
+        {
+            var threshold = ConfigManager.Get<int>("Special", "DynamicDoubleLineThreshold");
+            return _line.Count - _line.InactiveElements > (threshold?.Value ?? 9);
         }
 
         return ConfigManager.IsEnable("DoubleLine", $"Enable{Enum.GetName(typeof(LineType), _type)}");
