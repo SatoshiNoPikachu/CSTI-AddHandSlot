@@ -525,14 +525,24 @@ public class LineCtrl
             return _line.Count - _line.InactiveElements > 8;
         }
 
-        if (_type is LineType.Location or LineType.Base &&
-            ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), _type)}DynamicDoubleLine"))
+        if (IsDynamicDoubleLineType())
         {
-            var threshold = ConfigManager.Get<int>("Special", "DynamicDoubleLineThreshold");
-            return _line.Count - _line.InactiveElements > (threshold?.Value ?? 9);
+            var threshold = ConfigManager.Get<int>("Special", "DynamicDoubleLineThreshold")?.Value ?? 9;
+            var count = _line.Count - _line.InactiveElements;
+            // 滞回：已处于双行时需回落到阈值-2 及以下才切回单行，避免卡数在阈值边界增减时来回抖动
+            return _status == LineStatus.DoubleLine ? count > threshold - 2 : count > threshold;
         }
 
         return ConfigManager.IsEnable("DoubleLine", $"Enable{Enum.GetName(typeof(LineType), _type)}");
+    }
+
+    /// <summary>
+    /// 当前槽位类型是否启用了动态双行
+    /// </summary>
+    private bool IsDynamicDoubleLineType()
+    {
+        return _type is LineType.Location or LineType.Base &&
+               ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), _type)}DynamicDoubleLine");
     }
 
     private void ApplyScale(LineStatus status)
@@ -551,7 +561,10 @@ public class LineCtrl
     {
         if (_transView is null) return;
 
+        // Location/Base 启用动态双行时，ExtraSpaces 可能为空，
+        // 若在此早退会导致缩放已应用而双行重排被跳过（渲染成半高单行）
         if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+            !IsDynamicDoubleLineType() &&
             _line.ExtraSpaces is not { Count: > 0 }) return;
 
         var spaces = _line.ExtraSpaces;
@@ -596,7 +609,9 @@ public class LineCtrl
     public void RecalculatePositionOnDoubleLine(int _Index, ref Vector3 __result)
     {
         if (_transView is null) return;
+        // 与 RecalculateSizeOnDoubleLine 同理：动态双行类型不因 ExtraSpaces 为空而跳过双行重排
         if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+            !IsDynamicDoubleLineType() &&
             _line.ExtraSpaces is not { Count: > 0 }) return;
 
         var spaces = _line.ExtraSpaces;
@@ -611,7 +626,7 @@ public class LineCtrl
             count++;
         }
 
-        var num = spaces.Where(space => space.AtIndex <= _Index).Sum(space => space.Space);
+        var num = spaces?.Where(space => space.AtIndex <= _Index).Sum(space => space.Space) ?? 0f;
 
         if (_type is LineType.Hand or LineType.Exploration)
         {
