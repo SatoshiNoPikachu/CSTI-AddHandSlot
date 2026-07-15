@@ -305,10 +305,27 @@ public class LineCtrl
         if (type is LineType.Location or LineType.Base &&
             ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), (LineType)type)}DynamicDoubleLine"))
         {
+            var before = ctrl.Status;
             ctrl.CheckStatus();
+            // 状态在本次 UpdateList 中途切换时，本帧布局会混用新旧参数（表现为半张卡），
+            // 下一帧强制重算一次；状态稳定后不会重复触发
+            if (ctrl.Status != before) ScheduleLayoutRefresh(line);
         }
 
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculateSizeOnDoubleLine();
+    }
+
+    private static void ScheduleLayoutRefresh(CardLine line)
+    {
+        var ab = ActionBehaviour.Create(GraphicsManager.Instance);
+        var done = false;
+        ab.OnUpdateAction = () =>
+        {
+            if (done) return;
+            done = true;
+            if (line) line.UpdateList();
+            ab.Destroy();
+        };
     }
 
     public static void OnGetElementPosition(DynamicViewLayoutGroup group, int index, ref Vector3 result)
