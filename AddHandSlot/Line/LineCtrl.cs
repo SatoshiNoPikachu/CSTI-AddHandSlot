@@ -318,13 +318,27 @@ public class LineCtrl
     private static void ScheduleLayoutRefresh(CardLine line)
     {
         var ab = ActionBehaviour.Create(GraphicsManager.Instance);
-        var done = false;
+        var frame = 0;
         ab.OnUpdateAction = () =>
         {
-            if (done) return;
-            done = true;
-            if (line) line.UpdateList();
-            ab.Destroy();
+            frame++;
+            // LayoutOriginPos 只在 CalculateSizeAndProperties() 中重算（由 LateUpdate 消费
+            // RecalculateSize 标志触发，触发后立即清除）。状态切换帧上该标志被同帧消费，
+            // 而 RectTransform.rect 要到下一帧布局重建后才反映新尺寸，导致原点基于旧 rect
+            // 计算且不再被修正（表现为错误布局滞留）。这里延迟几帧重新置位标志，让游戏在
+            // rect 稳定后走原生的「重算原点 → UpdateList」路径。
+            // 注意不能直接调 UpdateList()：它不重算 LayoutOriginPos。
+            if (frame is 2 or 5 or 10)
+            {
+                if (line) line.RecalculateSize = true;
+                else
+                {
+                    ab.Destroy();
+                    return;
+                }
+            }
+
+            if (frame >= 10) ab.Destroy();
         };
     }
 
