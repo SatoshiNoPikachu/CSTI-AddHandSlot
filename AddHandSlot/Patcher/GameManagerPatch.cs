@@ -15,6 +15,11 @@ public static class GameManagerPatch
 
         StatCtrl.ForceModifyEncumbranceLimit();
         StatCtrl.ModifyEncumbranceLimit();
+        
+        foreach (var ctrl in LineCtrl.GetLines())
+        {
+            ctrl.CheckStatus();
+        }
     }
 
     [HarmonyPostfix, HarmonyPatch("ChangeStatValue")]
@@ -23,5 +28,13 @@ public static class GameManagerPatch
         while (result.MoveNext()) yield return result.Current;
 
         StatCtrl.OnStatValueChange(_Stat);
+    }
+
+    [HarmonyPostfix, HarmonyPatch("ChangeEnvironment"), HarmonyPriority(Priority.Last)]
+    public static IEnumerator ChangeEnvironment_Postfix(IEnumerator result)
+    {
+        while (result.MoveNext()) yield return result.Current;
+    
+        LineCtrl.OnChangeEnvironment();
     }
 }

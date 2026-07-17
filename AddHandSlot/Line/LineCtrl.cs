@@ -301,13 +301,6 @@ public class LineCtrl
         var ctrl = GetCtrl((LineType)type);
         if (ctrl is null) return;
 
-        // 环境/基础槽位启用动态双行时，卡牌数量变化后重新判定单/双行状态
-        if (type is LineType.Location or LineType.Base &&
-            ConfigManager.IsEnable("Special", $"Enable{Enum.GetName(typeof(LineType), (LineType)type)}DynamicDoubleLine"))
-        {
-            ctrl.CheckStatus();
-        }
-
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculateSizeOnDoubleLine();
     }
 
@@ -322,6 +315,12 @@ public class LineCtrl
         if (ctrl is null) return;
 
         if (ctrl.Status == LineStatus.DoubleLine) ctrl.RecalculatePositionOnDoubleLine(index, ref result);
+    }
+
+    public static void OnChangeEnvironment()
+    {
+        GetCtrl(LineType.Location)?.CheckStatus();
+        GetCtrl(LineType.Base)?.CheckStatus();
     }
 
     public static bool IsRunGetPointerIndex(CardLine line)
@@ -534,8 +533,8 @@ public class LineCtrl
     {
         if (_transView is null) return;
 
-        if (_type != LineType.Blueprint && _type != LineType.Exploration &&
-            _line.ExtraSpaces is not { Count: > 0 }) return;
+        // if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+        //     _line.ExtraSpaces is not { Count: > 0 }) return;
 
         var spaces = _line.ExtraSpaces;
         var count = _line.AllElements.Count - _line.InactiveElements;
@@ -579,8 +578,8 @@ public class LineCtrl
     public void RecalculatePositionOnDoubleLine(int _Index, ref Vector3 __result)
     {
         if (_transView is null) return;
-        if (_type != LineType.Blueprint && _type != LineType.Exploration &&
-            _line.ExtraSpaces is not { Count: > 0 }) return;
+        // if (_type != LineType.Blueprint && _type != LineType.Exploration &&
+        //     _line.ExtraSpaces is not { Count: > 0 }) return;
 
         var spaces = _line.ExtraSpaces;
         var padding = _args.Padding;
@@ -594,7 +593,7 @@ public class LineCtrl
             count++;
         }
 
-        var num = spaces.Where(space => space.AtIndex <= _Index).Sum(space => space.Space);
+        var num = spaces?.Where(space => space.AtIndex <= _Index).Sum(space => space.Space) ?? 0;
 
         if (_type is LineType.Hand or LineType.Exploration)
         {

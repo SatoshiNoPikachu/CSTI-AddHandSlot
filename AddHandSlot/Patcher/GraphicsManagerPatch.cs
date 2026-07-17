@@ -12,12 +12,6 @@ public static class GraphicsManagerPatch
     {
         LineCtrl.Init();
         StatBarCtrl.Init();
-
-        foreach (var ctrl in LineCtrl.GetLines())
-        {
-            ctrl.CheckStatus();
-        }
-
         StatBarCtrl.UpdateStatus();
     }
 
